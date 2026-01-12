@@ -1,0 +1,204 @@
+/* --- Scrollbar (Global for Sidebar Pages) --- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-orange);
+    border-radius: 10px;
+}
+
+/* --- Sidebar (Permanently Dark) --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1000;
+    overflow-y: auto;
+    color: var(--sidebar-text-primary);
+}
+
+.sidebar-header {
+    padding: 30px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.logo-img {
+    width: 30px;
+    height: auto;
+}
+
+.brand-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-orange);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sidebar-menu {
+    padding: 20px 15px;
+    flex-grow: 1;
+}
+
+.menu-category {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--sidebar-text-secondary);
+    margin: 15px 10px 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: var(--sidebar-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: var(--sidebar-text-primary);
+    background: var(--sidebar-hover);
+}
+
+.nav-item.active {
+    border-right: 3px solid var(--primary-orange);
+    background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+}
+
+.nav-item i {
+    width: 20px;
+    margin-right: 12px;
+    font-size: 16px;
+}
+
+/* Dropdown - Adjusted for Sidebar Theme */
+.nav-dropdown-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: var(--sidebar-text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-btn:hover {
+    color: var(--sidebar-text-primary);
+    background: var(--sidebar-hover);
+}
+
+.nav-dropdown.open .nav-dropdown-btn {
+    color: var(--primary-orange);
+    font-weight: 600;
+}
+
+.nav-dropdown-btn i.arrow {
+    margin-right: 0;
+    font-size: 10px;
+    transition: transform 0.3s;
+}
+
+.nav-dropdown.open .arrow {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown-content {
+    display: none;
+    padding-left: 20px;
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nav-dropdown.open .nav-dropdown-content {
+    display: block;
+}
+
+.sub-link {
+    display: block;
+    padding: 8px 15px 8px 35px;
+    color: var(--sidebar-text-secondary);
+    font-size: 13px;
+    position: relative;
+    font-weight: 400;
+}
+
+.sub-link:hover {
+    color: var(--sidebar-text-primary);
+}
+
+.sub-link::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--sidebar-text-secondary);
+}
+
+.sub-link:hover::before {
+    background: var(--primary-orange);
+}
+
+.user-role-badge {
+    font-size: 16px;
+    color: var(--primary-orange);
+    background: rgba(255, 107, 53, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-top: 8px;
+    display: inline-block;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
