@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIN Demographic Verification | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="css/sidebar-styles.css">
+
+    <style>
+        /* Reuse exact same styles as ninverify.html/nin_by_phone.html */
+        :root {
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --success: #28A745;
+            --danger: #DC3545;
+            --pale-orange: #FFF5EE;
+            --light-orange: #FFB86F;
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+            --pale-orange: #1B254B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-orange);
+            border-radius: 10px;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            overflow-y: auto;
+            color: var(--sidebar-text-primary);
+        }
+
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        .top-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h4 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-title h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        /* Matches new size */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-body {
+            padding: 15px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .verification-card,
+        .history-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(163, 174, 208, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-orange);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.2);
+        }
+
+        td {
+            padding: 20px 15px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        td:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        td:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .pagination-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover:not(:disabled),
+        .pagination-btn.active {
+            background: var(--primary-orange);
+            color: #fff;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .menu-toggle-btn {
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 99;
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .content-body {
+                overflow: visible;
+                padding-bottom: 80px;
+                height: auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s;
+                height: 100vh;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+                font-size: 20px;
+                color: var(--text-primary);
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .main-footer {
+                left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by js/load-components.js -->
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>Demographic</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+
+            <!-- Verification Form -->
+            <div class="verification-card">
+                <h2 class="card-title">Enter Demographic Details</h2>
+                <form id="verificationForm">
+                    <div class="form-row">
+                        <div class="form-col form-group">
+                            <label for="firstNameInput">First Name</label>
+                            <input type="text" id="firstNameInput" placeholder="First Name" required>
+                        </div>
+                        <div class="form-col form-group">
+                            <label for="surNameInput">Surname</label>
+                            <input type="text" id="surNameInput" placeholder="Surname" required>
+                        </div>
+                        <div class="form-col form-group">
+                            <label for="middleNameInput">Middle Name (Optional)</label>
+                            <input type="text" id="middleNameInput" placeholder="Middle Name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col form-group">
+                            <label for="dobInput">Date of Birth</label>
+                            <input type="date" id="dobInput" required>
+                        </div>
+                        <div class="form-col form-group">
+                            <label for="genderInput">Gender</label>
+                            <select id="genderInput" style="height: 54px;">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="verifyBtn">
+                        Search Demographic
+                    </button>
+                </form>
+            </div>
+
+            <!-- Verification History -->
+            <div class="history-section">
+                <h2 class="card-title">Search History</h2>
+                <div class="table-responsive">
+                    <table id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>Trx Ref</th>
+                                <th>Name</th>
+                                <th>Timestamp</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <tr>
+                                <td colspan="4" class="no-history" style="text-align: center;">No search history yet
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-container" id="paginationControls"></div>
+            </div>
+
+            <footer class="main-footer">
+                <!-- Footer content loaded by js/load-components.js -->
+            </footer>
+        </div>
+
+    </main>
+
+    <script src="js/load-components.js"></script>
+    <script>
+        // Mock Data
+        const mockResult = {
+            surname: 'OKONKWO', firstname: 'CHUKWUEMEKA', middlename: 'ADEBAYO',
+            imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop',
+            dateOfBirth: '1990-05-15', gender: 'Male', phone: '08012345678',
+            state: 'Lagos', lga: 'Ikeja', address: '123 Herbert Macaulay Way, Yaba, Lagos'
+        };
+
+        let verificationHistory = JSON.parse(localStorage.getItem('demographicHistory')) || [];
+
+        const rowsPerPage = 20;
+        let currentPage = 1;
+
+        const form = document.getElementById('verificationForm');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const historyBody = document.getElementById('historyBody');
+        const paginationControls = document.getElementById('paginationControls');
+
+        renderHistory();
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+
+            setTimeout(() => {
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'Search Demographic';
+
+                const userData = mockResult; // Always return success for demo
+                const firstName = document.getElementById('firstNameInput').value;
+                const middleName = document.getElementById('middleNameInput').value;
+                const surname = document.getElementById('surNameInput').value;
+
+                let fullName = firstName;
+                if (middleName && middleName.trim() !== '') {
+                    fullName += ' ' + middleName;
+                }
+                fullName += ' ' + surname;
+
+                const trxRef = Math.floor(100000 + Math.random() * 900000).toString();
+                const transaction = {
+                    trxRef,
+                    nin: fullName.toUpperCase(), // Using Name as identifier in history
+                    timestamp: new Date().toISOString(),
+                    data: userData
+                };
+
+                verificationHistory.unshift(transaction);
+                localStorage.setItem('demographicHistory', JSON.stringify(verificationHistory));
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Match Found',
+                    text: 'Redirecting to data page...',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    saveAndRedirect(transaction);
+                });
+
+                form.reset();
+            }, 1500);
+        });
+
+        function renderHistory() {
+            if (verificationHistory.length === 0) {
+                historyBody.innerHTML = '<tr><td colspan="4" class="no-history" style="text-align: center;">No search history yet</td></tr>';
+                paginationControls.innerHTML = '';
+                return;
+            }
+
+            const totalItems = verificationHistory.length;
+            const totalPages = Math.ceil(totalItems / rowsPerPage);
+
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const pageData = verificationHistory.slice(startIndex, endIndex);
+
+            historyBody.innerHTML = pageData.map(transaction => {
+                const date = new Date(transaction.timestamp);
+                return `
+                    <tr>
+                        <td><span style="font-family: monospace;">${transaction.trxRef}</span></td>
+                        <td>${transaction.nin}</td>
+                        <td>${formatDateTime(date)}</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding: 6px 16px; font-size: 12px;" onclick='saveAndRedirect(${JSON.stringify(transaction).replace(/'/g, "&apos;")})'>
+                                View
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            renderPaginationControls(totalPages);
+        }
+
+        function renderPaginationControls(totalPages) {
+            paginationControls.innerHTML = '';
+            if (totalPages <= 1) return;
+
+            const prevBtn = document.createElement('button');
+            prevBtn.textContent = 'Previous';
+            prevBtn.className = 'pagination-btn';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderHistory(); } };
+            paginationControls.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.onclick = () => { currentPage = i; renderHistory(); };
+                paginationControls.appendChild(pageBtn);
+            }
+
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = 'Next';
+            nextBtn.className = 'pagination-btn';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderHistory(); } };
+            paginationControls.appendChild(nextBtn);
+        }
+
+        function saveAndRedirect(transaction) {
+            const { trxRef, nin, data } = transaction;
+            const dob = new Date(data.dateOfBirth);
+            const dobFormatted = `${String(dob.getDate()).padStart(2, '0')}-${String(dob.getMonth() + 1).padStart(2, '0')}-${dob.getFullYear()}`;
+
+            const slipData = {
+                nin: 'N/A (Demographic)',
+                trackingId: trxRef,
+                surname: data.surname.toUpperCase(),
+                firstname: data.firstname.toUpperCase(),
+                middleName: (data.middlename || '').toUpperCase(),
+                gender: data.gender === 'Male' ? 'M' : 'F',
+                dateOfBirth: dobFormatted,
+                phone: data.phone || '',
+                stateOfResidence: data.state,
+                lgaOfResidence: data.lga,
+                address: data.address,
+                title: '',
+                lgaOfOrigin: '****',
+                stateOfOrigin: '****',
+                photo: data.imageUrl
+            };
+
+            localStorage.setItem('currentSlipData', JSON.stringify(slipData));
+            window.location.href = 'datapage.html';
+        }
+
+        function formatDateTime(date) {
+            return date.toLocaleString('en-GB', {
+                day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="css/sidebar-styles.css">
+
+    <style>
+        :root {
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --success: #05CD99;
+            --danger: #EE5D50;
+            --warning: #FFCE20;
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        .top-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-body {
+            padding: 20px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 800px;
+            /* Reduced width for list view looks better */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* --- Transaction List Styles --- */
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-radius: 16px;
+            background: var(--bg-body);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .transaction-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            background: var(--bg-card);
+            border-color: rgba(163, 174, 208, 0.2);
+        }
+
+        .trans-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .trans-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--primary-orange);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .trans-icon.credit {
+            color: var(--success);
+            background: rgba(5, 205, 153, 0.1);
+        }
+
+        .trans-icon.debit {
+            color: var(--danger);
+            background: rgba(238, 93, 80, 0.1);
+        }
+
+        .trans-icon.refund {
+            color: var(--warning);
+            background: rgba(255, 206, 32, 0.1);
+        }
+
+        .trans-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .trans-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .trans-date {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .trans-id {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-family: monospace;
+            opacity: 0.8;
+        }
+
+        .trans-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .trans-amount {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .amount-credit {
+            color: var(--success);
+        }
+
+        .amount-debit {
+            color: var(--danger);
+        }
+
+        .amount-refund {
+            color: var(--warning);
+        }
+
+        /* Or Orange */
+
+        .status-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(163, 174, 208, 0.1);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .status-badge.success {
+            background: rgba(5, 205, 153, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.failed {
+            background: rgba(238, 93, 80, 0.1);
+            color: var(--danger);
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 99;
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .menu-toggle-btn {
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .content-body {
+                padding: 15px;
+                padding-bottom: 80px;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                z-index: 1001;
+                transition: left 0.3s;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+                font-size: 20px;
+                color: var(--text-primary);
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .main-footer {
+                left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by js/load-components.js -->
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>Expenses</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+
+            <div class="section-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="card-title" style="margin-bottom: 0;">Recent Transactions</h2>
+                    <span style="font-size: 12px; color: var(--text-secondary); cursor: pointer;">View All</span>
+                </div>
+
+                <div class="transaction-list">
+
+                    <!-- Item 1: Buy Data (Debit) -->
+                    <div class="transaction-item">
+                        <div class="trans-left">
+                            <div class="trans-icon debit"><i class="fas fa-wifi"></i></div>
+                            <div class="trans-info">
+                                <span class="trans-title">Buy Data (MTN 1GB)</span>
+                                <span class="trans-date">11 Jan, 08:30 PM</span>
+                                <span class="trans-id">TX098123</span>
+                            </div>
+                        </div>
+                        <div class="trans-right">
+                            <span class="trans-amount amount-debit">- ₦300.00</span>
+                            <span class="status-badge success">Success</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Wallet Funding (Credit) -->
+                    <div class="transaction-item">
+                        <div class="trans-left">
+                            <div class="trans-icon credit"><i class="fas fa-wallet"></i></div>
+                            <div class="trans-info">
+                                <span class="trans-title">Wallet Funding</span>
+                                <span class="trans-date">11 Jan, 07:15 PM</span>
+                                <span class="trans-id">TX098124</span>
+                            </div>
+                        </div>
+                        <div class="trans-right">
+                            <span class="trans-amount amount-credit">+ ₦5,000.00</span>
+                            <span class="status-badge success">Success</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: NIN Verification (Debit) -->
+                    <div class="transaction-item">
+                        <div class="trans-left">
+                            <div class="trans-icon debit"><i class="fas fa-id-card"></i></div>
+                            <div class="trans-info">
+                                <span class="trans-title">NIN Verification</span>
+                                <span class="trans-date">11 Jan, 05:45 PM</span>
+                                <span class="trans-id">TX098125</span>
+                            </div>
+                        </div>
+                        <div class="trans-right">
+                            <span class="trans-amount amount-debit">- ₦150.00</span>
+                            <span class="status-badge success">Success</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 4: Airtime Refund (Refund) -->
+                    <div class="transaction-item">
+                        <div class="trans-left">
+                            <div class="trans-icon refund"><i class="fas fa-undo"></i></div>
+                            <div class="trans-info">
+                                <span class="trans-title">Refund: Buy Airtime (Glo)</span>
+                                <span class="trans-date">10 Jan, 10:20 AM</span>
+                                <span class="trans-id">TX098126</span>
+                            </div>
+                        </div>
+                        <div class="trans-right">
+                            <span class="trans-amount amount-refund">+ ₦1,000.00</span>
+                            <span class="status-badge success">Success</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 5: IPE Clearance (Failed) -->
+                    <div class="transaction-item">
+                        <div class="trans-left">
+                            <div class="trans-icon debit"><i class="fas fa-check-circle"></i></div>
+                            <div class="trans-info">
+                                <span class="trans-title">IPE Clearance</span>
+                                <span class="trans-date">09 Jan, 11:00 AM</span>
+                                <span class="trans-id">TX098127</span>
+                            </div>
+                        </div>
+                        <div class="trans-right">
+                            <span class="trans-amount amount-debit">- ₦200.00</span>
+                            <span class="status-badge failed">Failed</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="main-footer"></footer>
+    </main>
+
+    <script src="js/load-components.js"></script>
+</body>
+
+</html>

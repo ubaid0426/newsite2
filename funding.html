@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funding | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="css/sidebar-styles.css">
+
+    <style>
+        :root {
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Main structure inherited from other pages */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        .top-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-body {
+            padding: 20px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- Funding Page Specific Styles --- */
+
+        .funding-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Virtual Card Styling */
+        .virtual-card {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #FF8C42 50%, #FFB073 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Abstract Pattern Overlay */
+        .virtual-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .virtual-card::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 35px;
+            background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card-chip::before {
+            /* Chip Lines */
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateY(-50%);
+        }
+
+        .card-chip::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateX(-50%);
+        }
+
+        /* .bank-badge removed in favor of image, but keeping CSS if needed/fallback */
+        .bank-badge {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .account-number-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .account-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 36px;
+            /* Increased size */
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-copy-card {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-copy-card:hover {
+            background: white;
+            color: var(--primary-orange);
+            transform: scale(1.05);
+        }
+
+        .copy-hint {
+            font-size: 11px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .card-footer {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .account-holder-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .account-holder-name {
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .brand-text {
+            font-size: 14px;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        /* Instructions Section */
+        .funding-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .bank-logo-img {
+            height: 40px;
+            width: auto;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .instructions-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions-title i {
+            color: var(--primary-orange);
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.1);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 12px;
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .step-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 99;
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+        }
+
+        .menu-toggle-btn {
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .content-body {
+                padding: 15px;
+                padding-bottom: 80px;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                z-index: 1001;
+                transition: left 0.3s;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+                font-size: 20px;
+                color: var(--text-primary);
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .main-footer {
+                left: 0;
+                width: 100%;
+            }
+
+            .account-number {
+                font-size: 28px;
+                /* Slightly smaller on mobile but still big */
+            }
+
+            .virtual-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content -->
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>Wallet Funding</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+
+            <div class="funding-container">
+                <!-- Premium Virtual Card -->
+                <div class="virtual-card">
+                    <div class="card-header">
+                        <div class="card-chip"></div>
+                        <!-- Using a text placeholder for logo if image fails, styled to look like an image block -->
+                        <div class="bank-logo-img"
+                            style="display: flex; align-items: center; justify-content: center; font-weight: bold; color: #333; height: 30px;">
+                            MONIEPOINT</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="account-number-group">
+                            <span class="account-number" id="accNum">8236729013</span>
+                            <button class="btn-copy-card" onclick="copyAccount()" title="Copy Number">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                        <span class="copy-hint">Click icon to copy account number</span>
+                    </div>
+
+                    <div class="card-footer">
+                        <div>
+                            <span class="account-holder-label">Account Name</span>
+                            <span class="account-holder-name">UNIFY ICT HUB</span>
+                        </div>
+                        <span class="brand-text">UNIFY<span style="font-weight:300">VERIFIER</span></span>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions-card">
+                    <h3 class="instructions-title"><i class="fas fa-info-circle"></i> How to Fund Wallet</h3>
+
+                    <div class="steps-container">
+                        <div class="step-item">
+                            <div class="step-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="step-content">
+                                <h4>Step 1: Copy Account Number</h4>
+                                <p>Copy the 10-digit account number displayed on the card above. This is your dedicated
+                                    virtual account.</p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-icon"><i class="fas fa-university"></i></div>
+                            <div class="step-content">
+                                <h4>Step 2: Make a Transfer</h4>
+                                <p>Open your bank app and make a transfer of any amount to the copied account number.
+                                    Select <b>Moniepoint MFB</b> as the bank.</p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-icon"><i class="fas fa-wallet"></i></div>
+                            <div class="step-content">
+                                <h4>Step 3: Instant Credit</h4>
+                                <p>Your wallet will be credited automatically within seconds of the transaction being
+                                    successful.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="main-footer"></footer>
+    </main>
+
+    <script src="js/load-components.js"></script>
+    <script>
+        function copyAccount() {
+            const accNum = document.getElementById('accNum').textContent;
+            navigator.clipboard.writeText(accNum).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Account Number copied to clipboard.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    position: 'top-end',
+                    toast: true,
+                    background: '#05CD99', /* Green Success */
+                    color: '#fff',
+                    iconColor: '#fff'
+                });
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+
+</html>

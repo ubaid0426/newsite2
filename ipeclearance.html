@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPE Clearance | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="css/sidebar-styles.css">
+
+    <style>
+        :root {
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --success: #05CD99;
+            --danger: #EE5D50;
+            --warning: #FFCE20;
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        .top-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-body {
+            padding: 20px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(163, 174, 208, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+            background: var(--bg-card);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .counter-info {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .counter-item {
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: var(--bg-body);
+            font-weight: 600;
+        }
+
+        /* History Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.2);
+        }
+
+        td {
+            padding: 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.1);
+            white-space: normal;
+            /* Ensure text wraps */
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-completed {
+            background: rgba(5, 205, 153, 0.1);
+            color: var(--success);
+        }
+
+        .status-failed {
+            background: rgba(238, 93, 80, 0.1);
+            color: var(--danger);
+        }
+
+        .view-btn {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-orange);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .view-btn:hover {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        .copy-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            width: 100%;
+            outline: none;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .reply-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 140px;
+        }
+
+        .copy-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            width: 100%;
+            outline: none;
+        }
+
+        .copy-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+            color: var(--text-primary);
+        }
+
+        .report-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .report-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .report-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .batch-report-text {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            color: #333;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .batch-link {
+            color: var(--primary-orange);
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .btn-copy {
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+
+        .btn-copy:hover {
+            opacity: 0.9;
+        }
+
+        .report-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 0 auto 15px auto;
+            border: 3px solid var(--border-color);
+            display: block;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 99;
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .top-header {
+                padding: 0 15px;
+            }
+
+            .content-body {
+                overflow: visible;
+                padding: 10px;
+                padding-bottom: 80px;
+                height: auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s;
+                height: 100vh;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+                font-size: 20px;
+                color: var(--text-primary);
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .main-footer {
+                left: 0;
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by js/load-components.js -->
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>IPE Clearance</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+
+            <!-- Request Card -->
+            <div class="section-card">
+                <h2 class="card-title">Clear ID/Tracking ID</h2>
+                <form id="ipeForm" onsubmit="handleClearance(event)">
+
+                    <!-- Tracking IDs Input -->
+                    <div class="form-group">
+                        <label class="form-label">Enter Tracking IDs <span class="required-star">*</span></label>
+                        <textarea id="trackingIds" class="form-control"
+                            placeholder="ABC123DEF456789&#10;XYZ789GHI012345" oninput="updateCounter()"
+                            required></textarea>
+                        <div class="counter-info">
+                            <span class="counter-item" id="totalCounter">Total: 0</span>
+                            <span class="counter-item" id="validCounter"
+                                style="color: var(--success); background: rgba(5, 205, 153, 0.1);">Valid: 0</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">PROCESS REQUEST</button>
+                </form>
+            </div>
+
+            <!-- History Card -->
+            <div class="section-card">
+                <h2 class="card-title">Transaction History</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Batch No</th>
+                                <th>Old ID</th>
+                                <th>Reply (New ID / NIN)</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <tr>
+                                <td>TX001239</td>
+                                <td><a href="#" class="batch-link"
+                                        onclick="openBatchReport('BATCH-001', 5)">BATCH-001</a></td>
+                                <td>ABC123DEF456789</td>
+                                <td>
+                                    <div class="reply-stack">
+                                        <input type="text" class="copy-input" value="XYZ789GHI012345" readonly
+                                            onclick="this.select();">
+                                        <input type="text" class="copy-input" value="NIN: 12345678901" readonly
+                                            onclick="this.select();">
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>18 Nov, 12:30 PM</td>
+                                <td><button class="view-btn" onclick="openBatchReport('BATCH-001', 5)">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="main-footer"></footer>
+    </main>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Clearance Report</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="report-container">
+                    <pre id="batchReportContent" class="batch-report-text"></pre>
+                    <button class="btn-copy" onclick="copyReport()">
+                        <i class="fas fa-copy"></i> Copy Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/load-components.js"></script>
+    <script>
+        function updateCounter() {
+            const textarea = document.getElementById('trackingIds');
+            let text = textarea.value.toUpperCase();
+
+            // Enforce 15 chars per line limit
+            const lines = text.split('\n');
+            const processedLines = lines.map(line => {
+                // Remove non-alphanumeric (optional, but good for "alphanumeric" requirement)
+                let cleaned = line.replace(/[^A-Z0-9]/g, '');
+                // Truncate to 15
+                return cleaned.slice(0, 15);
+            });
+
+            // Update value if changed (prevents infinite loop but ensures constraint)
+            const newText = processedLines.join('\n');
+            if (newText !== textarea.value) {
+                textarea.value = newText;
+                text = newText;
+            }
+
+            const validLines = processedLines.filter(line => line.length === 15); // Exact 15
+
+            // Filter empty lines for total count to be more accurate visually
+            const nonEmptyLines = processedLines.filter(line => line.length > 0);
+
+            document.getElementById('totalCounter').textContent = `Total: ${nonEmptyLines.length}`;
+            document.getElementById('validCounter').textContent = `Valid: ${validLines.length}`;
+        }
+
+        function handleClearance(e) {
+            e.preventDefault();
+
+            const ids = document.getElementById('trackingIds').value;
+            const lines = ids.split('\n').filter(line => line.trim().length === 15); // Only process valid lines
+
+            if (lines.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Valid IDs',
+                    text: 'Please enter at least one valid 15-character tracking ID.',
+                    confirmButtonColor: '#FF6B35'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Confirm Clearance',
+                html: `Process <b>${lines.length}</b> Tracking ID(s)?<br>Total Cost: <b style="color:var(--primary-orange);">N${lines.length * 50}</b>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#FF6B35',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Process'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Clearing tracking IDs...',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'IDs processed successfully.',
+                            confirmButtonColor: '#FF6B35'
+                        });
+
+                        // Add mock result to table
+                        const tbody = document.getElementById('historyBody');
+                        const batchNum = "BATCH-" + Math.floor(Math.random() * 1000); // Simulate Batch
+
+                        const date = new Date();
+                        const formattedDate = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                        const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                        const dateTimeString = `${formattedDate}, ${formattedTime}`;
+
+                        lines.forEach(id => {
+                            // Generate mock reply data
+                            const newId = "NEW" + Math.random().toString(36).substr(2, 12).toUpperCase();
+                            const nin = Math.floor(10000000000 + Math.random() * 90000000000);
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>TX${Math.floor(Math.random() * 100000)}</td>
+                                <td><a href="#" class="batch-link" onclick="openBatchReport('${batchNum}', ${lines.length})">${batchNum}</a></td>
+                                <td>${id.trim().toUpperCase()}</td>
+                                <td>
+                                    <div class="reply-stack">
+                                        <input type="text" class="copy-input" value="${newId}" readonly onclick="this.select();">
+                                        <input type="text" class="copy-input" value="NIN: ${nin}" readonly onclick="this.select();">
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>${dateTimeString}</td>
+                                <td><button class="view-btn" onclick="openBatchReport('${batchNum}', ${lines.length})">View</button></td>
+                            `;
+                            tbody.insertBefore(tr, tbody.firstChild);
+                        });
+
+                        document.getElementById('ipeForm').reset();
+                        updateCounter();
+                    });
+                }
+            });
+        }
+
+        function openBatchReport(batchId, count) {
+            // Generate mock batch report data based on format
+            let reportText = "";
+            let successCount = 0;
+            let failedCount = 0;
+
+            for (let i = 0; i < count; i++) {
+                const isSuccess = Math.random() > 0.1;
+                const oldId = "0T" + Math.random().toString(36).substr(2, 13).toUpperCase();
+
+                if (isSuccess) {
+                    successCount++;
+                    const newId = "S" + Math.random().toString(36).substr(2, 14).toUpperCase();
+                    const nin = Math.floor(10000000000 + Math.random() * 90000000000);
+                    reportText += `${oldId}=${newId}=${nin}\n`;
+                } else {
+                    failedCount++;
+                    reportText += `${oldId}=No Record Found\n`;
+                }
+            }
+
+            reportText += `\nSummary:\n`;
+            reportText += `Total Records: ${count}\n`;
+            reportText += `Total Successful: ${successCount}\n`;
+            reportText += `Total Failed: ${failedCount}`;
+
+            document.getElementById('batchReportContent').textContent = reportText;
+            document.getElementById('reportModal').style.display = 'block';
+        }
+
+        function copyReport() {
+            const content = document.getElementById('batchReportContent').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Report copied to clipboard',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('reportModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+
+</html>

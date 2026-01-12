@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BVN Modification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/sidebar-styles.css">
+    <style>
+        :root {
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --success: #28A745;
+            --danger: #DC3545;
+            --warning: #FFC107;
+            --info: #17a2b8;
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Layout */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        .top-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-body {
+            padding: 20px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: none;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.2);
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .required-star {
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(163, 174, 208, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .form-control::placeholder {
+            text-transform: none;
+            color: var(--text-secondary);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: none;
+        }
+
+        .form-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .price-tag {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-orange);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+
+        .btn-submit {
+            background: var(--primary-orange);
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+
+        .btn-submit:hover {
+            background: var(--secondary-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Alert Box */
+        .alert-box {
+            padding: 15px;
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 13px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.2);
+        }
+
+        td {
+            padding: 20px 15px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: none;
+        }
+
+        td:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        td:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .history-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .status-processing {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+            border: 1px solid rgba(23, 162, 184, 0.2);
+        }
+
+        .status-completed {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .status-rejected {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 11px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-remark {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+            border: 1px solid rgba(23, 162, 184, 0.2);
+        }
+
+        .btn-remark:hover {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-view {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+            border: 1px solid rgba(163, 174, 208, 0.3);
+        }
+
+        .remark-area {
+            border: 2px dashed rgba(163, 174, 208, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+            background: var(--bg-body);
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 99;
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        .menu-toggle-btn {
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .content-body {
+                overflow: visible;
+                padding-bottom: 80px;
+                height: auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s;
+                height: 100vh;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+                font-size: 20px;
+                color: var(--text-primary);
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .main-footer {
+                left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by js/load-components.js -->
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>BVN Modification</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+            <!-- Main Container -->
+            <!-- Modification Form Card -->
+            <div class="section-card">
+                <h2 class="section-title">SUBMIT REQUEST</h2>
+
+                <form id="modificationForm" onsubmit="event.preventDefault(); alert('Request Submitted!');">
+
+                    <!-- Step 1: Bank Selection -->
+                    <div class="form-group">
+                        <label class="form-label">SELECT BANK <span class="required-star">*</span></label>
+                        <select id="modBank" class="form-control" onchange="updateModTypes()" required>
+                            <option value="">-- SELECT BANK --</option>
+                            <option value="agency">AGENCY BANKING (OUT SIDE BANK)</option>
+                            <option value="firstbank">FIRST BANK</option>
+                            <option value="mfb">MICROFINANCE BANK</option>
+                        </select>
+                    </div>
+
+                    <!-- Step 2: Type -->
+                    <div class="form-group" id="modTypeGroup" style="display:none;">
+                        <label class="form-label">MODIFICATION TYPE <span id="priceDisplay" class="price-tag"></span>
+                            <span class="required-star">*</span></label>
+                        <select id="modType" class="form-control" onchange="showForm()" required>
+                            <option value="">-- SELECT TYPE --</option>
+                            <!-- Options populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Forms Container -->
+                    <div id="dynamicForms">
+                        <!-- Name Mod -->
+                        <div id="form-name" class="form-section">
+                            <div class="form-group"><label class="form-label">BVN <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required placeholder="ENTER 11 DIGIT BVN" maxlength="11"
+                                    oninput="validateNIN(this)">
+                            </div>
+                            <div class="form-group"><label class="form-label">FIRST NAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">SURNAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">MIDDLE NAME</label><input type="text"
+                                    class="form-control"></div>
+                            <div class="form-group"><label class="form-label">UPLOAD NIN SLIP <span
+                                        class="required-star">*</span></label><input type="file" class="form-control"
+                                    accept="image/*,.pdf" required></div>
+                        </div>
+
+                        <!-- Phone Mod -->
+                        <div id="form-phone" class="form-section">
+                            <div class="form-group"><label class="form-label">BVN <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required maxlength="11" oninput="validateNIN(this)"></div>
+                            <div class="form-group"><label class="form-label">GSM (11 DIGITS) <span
+                                        class="required-star">*</span></label><input type="tel" class="form-control"
+                                    maxlength="11" oninput="validateNIN(this)" required placeholder="08012345678">
+                            </div>
+                            <div class="form-group"><label class="form-label">UPLOAD NIN SLIP <span
+                                        class="required-star">*</span></label><input type="file" class="form-control"
+                                    accept="image/*,.pdf" required></div>
+                        </div>
+
+                        <!-- Name and Phone -->
+                        <div id="form-name-phone" class="form-section">
+                            <div class="form-group"><label class="form-label">BVN <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required maxlength="11" oninput="validateNIN(this)"></div>
+                            <div class="form-group"><label class="form-label">FIRST NAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">SURNAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">GSM (11 DIGITS) <span
+                                        class="required-star">*</span></label><input type="tel" class="form-control"
+                                    maxlength="11" oninput="validateNIN(this)" required></div>
+                            <div class="form-group"><label class="form-label">UPLOAD NIN SLIP <span
+                                        class="required-star">*</span></label><input type="file" class="form-control"
+                                    accept="image/*,.pdf" required></div>
+                        </div>
+
+                        <!-- DOB Mod -->
+                        <div id="form-dob" class="form-section">
+                            <div class="form-group"><label class="form-label">BVN <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required maxlength="11" oninput="validateNIN(this)"></div>
+                            <div class="form-group"><label class="form-label">FULL NAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">OLD DOB <span
+                                        class="required-star">*</span></label><input type="date" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">NEW DOB <span
+                                        class="required-star">*</span></label><input type="date" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">UPLOAD NIN SLIP <span
+                                        class="required-star">*</span></label><input type="file" class="form-control"
+                                    accept="image/*,.pdf" required></div>
+                        </div>
+
+                        <!-- Name and DOB -->
+                        <div id="form-name-dob" class="form-section">
+                            <div class="form-group"><label class="form-label">BVN <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required maxlength="11" oninput="validateNIN(this)"></div>
+                            <div class="form-group"><label class="form-label">FIRST NAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">SURNAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">MIDDLE NAME</label><input type="text"
+                                    class="form-control"></div>
+                            <div class="form-group"><label class="form-label">OLD DOB <span
+                                        class="required-star">*</span></label><input type="date" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">NEW DOB <span
+                                        class="required-star">*</span></label><input type="date" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">UPLOAD NIN SLIP <span
+                                        class="required-star">*</span></label><input type="file" class="form-control"
+                                    accept="image/*,.pdf" required></div>
+                        </div>
+
+                        <!-- DOB and Phone -->
+                        <div id="form-dob-phone" class="form-section">
+                            <div class="form-group"><label class="form-label">BVN <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required maxlength="11" oninput="validateNIN(this)"></div>
+                            <div class="form-group"><label class="form-label">FULL NAME <span
+                                        class="required-star">*</span></label><input type="text" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">GSM (11 DIGITS) <span
+                                        class="required-star">*</span></label><input type="tel" class="form-control"
+                                    maxlength="11" oninput="validateNIN(this)" required></div>
+                            <div class="form-group"><label class="form-label">OLD DOB <span
+                                        class="required-star">*</span></label><input type="date" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">NEW DOB <span
+                                        class="required-star">*</span></label><input type="date" class="form-control"
+                                    required></div>
+                            <div class="form-group"><label class="form-label">UPLOAD NIN SLIP <span
+                                        class="required-star">*</span></label><input type="file" class="form-control"
+                                    accept="image/*,.pdf" required></div>
+                        </div>
+
+                    </div>
+
+                    <div id="submit-area" style="display:none;">
+                        <button type="submit" class="btn-submit">SUBMIT REQUEST</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- History Section -->
+            <div class="section-card">
+                <h2 class="section-title">REQUEST HISTORY</h2>
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>BVN</th>
+                                <th>TYPE</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2023-12-25</td>
+                                <td>22233344455</td>
+                                <td>PHONE MOD</td>
+                                <td><span class="status-badge status-completed">COMPLETED</span></td>
+                                <td><button class="btn-sm btn-remark" onclick="toggleRemark(this)">VIEW
+                                        REPORT</button></td>
+                            </tr>
+                            <tr>
+                                <td>2023-12-20</td>
+                                <td>55566677788</td>
+                                <td>NAME MOD</td>
+                                <td><span class="status-badge status-processing">PROCESSING</span></td>
+                                <td><button class="btn-sm btn-view">VIEW</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- View Tracking ID Panel -->
+                <div id="remarkPanel" class="remark-area" style="display:none;">
+                    <h4 style="margin-bottom:15px; font-size:14px; text-transform:uppercase; color:var(--text-light);">
+                        UPDATED TRACKING ID</h4>
+                    <div class="tracking-display"
+                        style="background:#e9ecef; padding:15px; border-radius:8px; font-weight:bold; color:var(--text-dark); font-size:18px; letter-spacing:1px; margin-bottom:15px;">
+                        MBVN-7744-2023
+                    </div>
+                    <div style="font-size:12px; color:var(--success); margin-bottom:10px;"><i
+                            class="fas fa-check-circle"></i> Updated from Admin Dashboard</div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="main-footer"></footer>
+    </main>
+
+    <script src="js/load-components.js"></script>
+    <script>
+        // Data Structure
+        const modTypes = [
+            { id: 'phone', label: 'Phone Number', price: 5000 },
+            { id: 'name', label: 'Name Mod', price: 5000 },
+            { id: 'dob', label: 'DOB Mod', price: 5000 },
+            { id: 'name-dob', label: 'Name and DOB', price: 5000 },
+            { id: 'name-phone', label: 'Name and Phone', price: 5000 },
+            { id: 'dob-phone', label: 'DOB and Phone', price: 5000 }
+        ];
+
+        function updateModTypes() {
+            const bank = document.getElementById('modBank').value;
+            const typeSelect = document.getElementById('modType');
+            const typeGroup = document.getElementById('modTypeGroup');
+
+            // Reset
+            typeSelect.innerHTML = '<option value="">-- SELECT TYPE --</option>';
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('submit-area').style.display = 'none';
+            document.getElementById('priceDisplay').textContent = '';
+
+            if (!bank) {
+                typeGroup.style.display = 'none';
+                return;
+            }
+
+            typeGroup.style.display = 'block';
+
+            // Populate Options
+            modTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.id;
+                option.text = `${type.label} - ₦${type.price.toLocaleString()}`.toUpperCase();
+                option.dataset.price = type.price;
+                typeSelect.appendChild(option);
+            });
+        }
+
+        function showForm() {
+            const typeId = document.getElementById('modType').value;
+            const priceDisplay = document.getElementById('priceDisplay');
+            const submitArea = document.getElementById('submit-area');
+
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+
+            if (!typeId) {
+                priceDisplay.textContent = '';
+                submitArea.style.display = 'none';
+                return;
+            }
+
+            // Show Price
+            const selectedOption = document.getElementById('modType').selectedOptions[0];
+            priceDisplay.textContent = `COST: ₦${parseInt(selectedOption.dataset.price).toLocaleString()}`;
+            submitArea.style.display = 'block';
+
+            // Map ID to Section ID
+            let sectionId = `form-${typeId}`;
+
+            if (typeId === 'name') sectionId = 'form-name';
+            else if (typeId === 'phone') sectionId = 'form-phone';
+            else if (typeId === 'name-phone') sectionId = 'form-name-phone';
+            else if (typeId === 'dob') sectionId = 'form-dob';
+            else if (typeId === 'name-dob') sectionId = 'form-name-dob';
+            else if (typeId === 'dob-phone') sectionId = 'form-dob-phone';
+
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+        }
+
+        function validateNIN(input) {
+            // Remove non-numeric characters (reused from NIN page, works for BVN too)
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+        function toggleRemark(btn) {
+            const panel = document.getElementById('remarkPanel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                btn.innerHTML = 'CLOSE';
+                panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                panel.style.display = 'none';
+                btn.innerHTML = 'VIEW REPORT';
+            }
+        }
+    </script>
+</body>
+
+</html>

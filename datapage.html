@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Identification Number (NIN)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-orange: #FF6B35;
+            --secondary-orange: #FF8C42;
+            --light-orange: #FFB86F;
+            --pale-orange: #FFF5EE;
+            --bg-gray: #F5F7FA;
+            --text-dark: #2C3E50;
+            --text-light: #6C757D;
+            --white: #FFFFFF;
+            --border: #E0E6ED;
+            --success: #28A745;
+            --danger: #DC3545;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--white);
+            max-width: 900px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border: 2px solid var(--primary-orange);
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Optional: Add a subtle gradient effect similar to dashboard services */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--pale-orange), transparent);
+            border-radius: 13px;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .header h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .header h3 {
+            font-size: 14px;
+            font-weight: normal;
+            color: #666;
+        }
+
+        .coat-of-arms {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #006a4e 50%, #ffffff 50%);
+            border-radius: 50%;
+            border: 2px solid #006a4e;
+        }
+
+        .content {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .photo-section {
+            flex-shrink: 0;
+        }
+
+        .photo-box {
+            width: 70px;
+            height: 170px;
+            border: 2px solid #ddd;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e0e0e0 25%, #f0f0f0 25%, #f0f0f0 50%, #e0e0e0 50%, #e0e0e0 75%, #f0f0f0 75%, #f0f0f0);
+            background-size: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .signature-box {
+            width: 180px;
+            height: 60px;
+            border: 2px solid #ddd;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .info-section {
+            flex-grow: 1;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .info-table td {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        .info-table td:first-child {
+            font-weight: bold;
+            color: #333;
+            width: 40%;
+            background-color: #f9f9f9;
+        }
+
+        .info-table td:last-child {
+            color: #555;
+            word-break: break-all;
+            /* Ensure long values wrap if needed */
+        }
+
+        .note {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .note strong {
+            color: #333;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            color: rgba(0, 0, 0, 0.03);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                border: none;
+                /* Remove colored border on print */
+            }
+
+            .download-section {
+                display: none !important;
+                /* Hide downloads on print */
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 30px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .photo-box,
+            .signature-box {
+                width: 100%;
+                max-width: 250px;
+                margin: 0 auto 10px;
+            }
+
+            .coat-of-arms {
+                width: 50px;
+                height: 50px;
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            .header h2 {
+                font-size: 15px;
+            }
+
+            .header h3 {
+                font-size: 12px;
+            }
+
+            .info-table td {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .note {
+                padding: 6px;
+                font-size: 11px;
+            }
+
+
+        }
+
+        .download-section {
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .download-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .download-card {
+            background: var(--bg-gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 250px;
+            /* Increased height for images */
+        }
+
+        .download-card:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.15);
+        }
+
+        .slip-preview {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .download-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .price-tag {
+            background-color: var(--primary-orange);
+            color: var(--white);
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: auto;
+        }
+
+        /* Footer & Close Button Styles */
+        .close-page-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            z-index: 1000;
+            transition: transform 0.3s;
+            border: 1px solid #ddd;
+        }
+
+        .close-page-btn:hover {
+            transform: scale(1.1);
+            color: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+
+        .main-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #FF6B35;
+            text-align: center;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+
+        .main-footer a {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .main-footer a:hover {
+            color: #fff;
+        }
+
+        @media print {
+
+            .close-page-btn,
+            .main-footer {
+                display: none !important;
+            }
+
+            body {
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="watermark">NIN</div>
+
+    <div class="container">
+        <div class="header">
+            <h1>National Identity Management System</h1>
+            <h2>Federal Republic of Nigeria</h2>
+            <h3>National Identification Number (NIN)</h3>
+            <div> <img src="Coat_of_arms_of_Nigeria.svg.png" width="50" height="50" alt=""></div>
+        </div>
+
+        <div class="content">
+            <div class="photo-section">
+                <div class="photo-box">
+                    <div class="photo-placeholder">
+                        <span>Photo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <table class="info-table">
+                    <tr>
+                        <td>NIN</td>
+                        <td>27851146380</td>
+                    </tr>
+                    <tr>
+                        <td>Tracking ID</td>
+                        <td>0T2GVT9S17LLX0S</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>****</td>
+                    </tr>
+                    <tr>
+                        <td>Surname</td>
+                        <td>ABDULKARIM</td>
+                    </tr>
+                    <tr>
+                        <td>Firstname</td>
+                        <td>SULAIMAN</td>
+                    </tr>
+                    <tr>
+                        <td>Middle Name</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Gender</td>
+                        <td>M</td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Date of Birth</td>
+                        <td>01-01-1993</td>
+                    </tr>
+                    <tr>
+                        <td>Lga of Origin</td>
+                        <td>****</td>
+                    </tr>
+                    <tr>
+                        <td>State of Origin</td>
+                        <td>****</td>
+                    </tr>
+                    <tr>
+                        <td>Lga Of Residence</td>
+                        <td>Tudun Wada</td>
+                    </tr>
+                    <tr>
+                        <td>State of Residence</td>
+                        <td>Kano</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>TUDUN WADA</td>
+                    </tr>
+                </table>
+                <div class="signature-box" style="margin-top: 20px; width: 100%;">
+                    Signature Photo
+                </div>
+            </div>
+
+        </div>
+
+        <div class="note">
+            <strong>NOTE:</strong> The National Identification Number (NIN) is your identity. It is confidential and may
+            only be released for legitimate transactions.
+        </div>
+
+        <!-- Download Options Section -->
+        <div class="download-section">
+            <h3 class="download-title">Available Slips</h3>
+            <div class="download-grid">
+                <!-- Datapage (Current) -->
+                <a href="#" onclick="window.print(); return false;" class="download-card">
+                    <img src="datapage.png" alt="Datapage" class="slip-preview">
+                    <span class="download-name">DATAPAGE</span>
+                    <span class="price-tag">₦1,000</span>
+                </a>
+                <!-- Long Slip -->
+                <a href="longslip.html" target="_blank" class="download-card">
+                    <img src="regular.png" alt="Long Slip" class="slip-preview">
+                    <span class="download-name">LONG SLIP</span>
+                    <span class="price-tag">₦1,500</span>
+                </a>
+                <!-- Standard Slip -->
+                <a href="standardslip.html" target="_blank" class="download-card">
+                    <img src="standard8.png" alt="Standard Slip" class="slip-preview">
+                    <span class="download-name">STANDARD SLIP</span>
+                    <span class="price-tag">₦1,000</span>
+                </a>
+                <!-- Premium Slip -->
+                <a href="premiumslip.html" target="_blank" class="download-card">
+                    <img src="premium.png" alt="Premium Slip" class="slip-preview">
+                    <span class="download-name">PREMIUM SLIP</span>
+                    <span class="price-tag">₦2,000</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close Button -->
+    <a href="ninverify.html" class="close-page-btn" title="Back to Verification">&times;</a>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <!-- Content loaded by js/load-components.js -->
+    </footer>
+
+    <!-- Load Components Script -->
+    <script src="js/load-components.js"></script>
+
+    <script>
+        // Adjust body padding for footer
+        document.body.style.paddingBottom = '70px';
+
+        // Optional: Add print functionality
+        document.addEventListener('keydown', function (e) {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+
+        // Optional: Add dynamic data loading capability
+        // Optional: Add dynamic data loading capability
+        function loadNINData(data) {
+            const fields = {
+                'NIN': data.nin,
+                'Tracking ID': data.trackingId,
+                'Title': data.title,
+                'Surname': data.surname,
+                'Firstname': data.firstname,
+                'Middle Name': data.middleName,
+                'Gender': data.gender,
+                'Phone': data.phone,
+                'Date of Birth': data.dateOfBirth,
+                'Lga of Origin': data.lgaOfOrigin,
+                'State of Origin': data.stateOfOrigin,
+                'Lga Of Residence': data.lgaOfResidence,
+                'State of Residence': data.stateOfResidence,
+                'Address': data.address
+            };
+
+            const rows = document.querySelectorAll('.info-table tr');
+            rows.forEach(row => {
+                const label = row.cells[0].textContent.trim();
+                // Map header labels if needed or just rely on text
+                if (fields[label] !== undefined) {
+                    row.cells[1].textContent = fields[label] || '';
+                }
+            });
+
+            // Handle Photo
+            if (data.photo) {
+                const photoBox = document.querySelector('.photo-box');
+                photoBox.innerHTML = `<img src="${data.photo}" alt="User Photo" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+        }
+
+        // Auto-load from localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem('currentSlipData');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    loadNINData(data);
+                } catch (e) {
+                    console.error("Error loading slip data", e);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIN Validation | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="css/sidebar-styles.css">
+
+    <style>
+        :root {
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --success: #05CD99;
+            --danger: #EE5D50;
+            --warning: #FFCE20;
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+        }
+
+        .top-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-body {
+            padding: 20px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* History Section Styles */
+        .history-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(163, 174, 208, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg-body);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+            background: var(--bg-card);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23A3AED0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .required-star {
+            color: #ff0000;
+        }
+
+        .validation-desc {
+            background-color: rgba(255, 107, 53, 0.1);
+            color: var(--primary-orange);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        /* History Table Styles */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            background: var(--bg-body);
+            padding: 15px;
+            border-radius: 16px;
+            border-left: 5px solid var(--primary-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-info h4 {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .history-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-completed {
+            background: rgba(5, 205, 153, 0.1);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(255, 206, 32, 0.1);
+            color: var(--warning);
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 99;
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .top-header {
+                padding: 0 15px;
+            }
+
+            .content-body {
+                overflow: visible;
+                padding: 10px;
+                padding-bottom: 80px;
+                height: auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s;
+                height: 100vh;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+                font-size: 20px;
+                color: var(--text-primary);
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .main-footer {
+                left: 0;
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+            color: var(--text-primary);
+        }
+
+        .report-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .report-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border-bottom: 1px solid rgba(163, 174, 208, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .report-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .report-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 0 auto 15px auto;
+            border: 3px solid var(--border-color);
+            display: block;
+        }
+
+        .view-btn {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-orange);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            background: var(--primary-orange);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by js/load-components.js -->
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>NIN Validation</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+
+            <!-- Request Card -->
+            <div class="section-card">
+                <h2 class="card-title">Submit Validation Request</h2>
+                <form id="validationForm" onsubmit="handleValidation(event)">
+
+                    <!-- Validation Type -->
+                    <div class="form-group">
+                        <label class="form-label">Validation Type <span class="required-star">*</span></label>
+                        <select id="validationType" class="form-control" onchange="showDescription()" required>
+                            <option value="">-- Select Validation Type --</option>
+                            <option value="normal">Normal/No Record Validation</option>
+                            <option value="modification">Modification Validation</option>
+                            <option value="vnin">VNIN / SIM / Bank Validation</option>
+                            <option value="photo">Photography Error Validation</option>
+                        </select>
+
+                        <div id="desc-normal" class="validation-desc">
+                            <strong>Normal Validation:</strong> Standard verification to confirm if a NIN exists in the
+                            NIMC database and retrieve basic information.
+                        </div>
+                        <div id="desc-modification" class="validation-desc">
+                            <strong>Modification Validation:</strong> Used to verify NINs that have undergone
+                            modifications or corrections (Name, DOB, etc.).
+                        </div>
+                        <div id="desc-vnin" class="validation-desc">
+                            <strong>VNIN Validation:</strong> Virtual NIN validation used primarily for SIM card
+                            registration and bank account opening.
+                        </div>
+                        <div id="desc-photo" class="validation-desc">
+                            <strong>Photo Error Validation:</strong> Resolve issues related to missing or incorrect
+                            photographs in the NIN record.
+                        </div>
+                    </div>
+
+                    <!-- NIN Input -->
+                    <div class="form-group">
+                        <label class="form-label">NIN Number <span class="required-star">*</span></label>
+                        <input type="text" id="nin" class="form-control" placeholder="Enter 11-digit NIN" maxlength="11"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">SUBMIT REQUEST</button>
+                </form>
+            </div>
+
+            <!-- History Card -->
+            <div class="history-card">
+                <h2 class="card-title">Validation History</h2>
+                <div class="history-list" id="historyList">
+                    <!-- Sample Data -->
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>Normal Validation</h4>
+                            <p>NIN: 12345678901 • Nov 15, 2024</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="status-badge status-completed">Completed</span>
+                            <button class="view-btn"
+                                onclick="openReport('12345678901', 'John Doe', '1990-05-15', 'Validation Successful')">View</button>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>VNIN Validation</h4>
+                            <p>NIN: 98765432109 • Nov 16, 2024</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="status-badge status-pending">Pending</span>
+                            <button class="view-btn" disabled style="opacity: 0.5; cursor: not-allowed;">View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="main-footer"></footer>
+    </main>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Validation Report</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img src="https://via.placeholder.com/150" alt="User Image" class="report-image" id="reportImage">
+                <div class="report-grid">
+                    <div class="report-item">
+                        <span class="report-label">NIN Number</span>
+                        <span class="report-value" id="reportNIN"></span>
+                    </div>
+                    <div class="report-item">
+                        <span class="report-label">Full Name</span>
+                        <span class="report-value" id="reportName"></span>
+                    </div>
+                    <div class="report-item">
+                        <span class="report-label">Date of Birth</span>
+                        <span class="report-value" id="reportDOB"></span>
+                    </div>
+                    <div class="report-item">
+                        <span class="report-label">Remark</span>
+                        <span class="report-value" id="reportRemark" style="color: var(--success);"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/load-components.js"></script>
+    <script>
+        function openReport(nin, name, dob, remark) {
+            document.getElementById('reportNIN').textContent = nin;
+            document.getElementById('reportName').textContent = name;
+            document.getElementById('reportDOB').textContent = dob;
+            document.getElementById('reportRemark').textContent = remark;
+
+            // In a real app, you'd fetch the specific image. For now, using a placeholder.
+            document.getElementById('reportImage').src = "https://ui-avatars.com/api/?name=" + name + "&background=FF6B35&color=fff&size=200";
+
+            document.getElementById('reportModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('reportModal')) {
+                closeModal();
+            }
+        }
+
+        function showDescription() {
+            // Hide all descriptions
+            document.querySelectorAll('.validation-desc').forEach(el => el.style.display = 'none');
+
+            const type = document.getElementById('validationType').value;
+            if (type) {
+                const descEl = document.getElementById(`desc-${type}`);
+                if (descEl) descEl.style.display = 'block';
+            }
+        }
+
+        function handleValidation(e) {
+            e.preventDefault();
+
+            const type = document.getElementById('validationType').value;
+            const typeText = document.getElementById('validationType').options[document.getElementById('validationType').selectedIndex].text;
+            const nin = document.getElementById('nin').value;
+
+            if (!type || !nin) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Details',
+                    text: 'Please select a validation type and enter a NIN.',
+                    confirmButtonColor: '#FF6B35'
+                });
+                return;
+            }
+
+            if (nin.length !== 11) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid NIN',
+                    text: 'NIN must be exactly 11 digits.',
+                    confirmButtonColor: '#FF6B35'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Confirm Request',
+                html: `Submit request for <b>${typeText}</b>?<br>NIN: <b>${nin}</b>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#FF6B35',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Submit'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Submitting...',
+                        text: 'Please wait while we process your request.',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Request Submitted',
+                            text: 'Your validation request has been logged.',
+                            confirmButtonColor: '#FF6B35'
+                        });
+
+                        // Add to history (Mock)
+                        const historyList = document.getElementById('historyList');
+                        const newItem = document.createElement('div');
+                        newItem.className = 'history-item';
+                        newItem.innerHTML = `
+                            <div class="history-info">
+                                <h4>${typeText}</h4>
+                                <p>NIN: ${nin} • Just Now</p>
+                            </div>
+                            <span class="status-badge status-pending">Pending</span>
+                        `;
+                        historyList.insertBefore(newItem, historyList.firstChild);
+
+                        // Reset form
+                        document.getElementById('validationForm').reset();
+                        document.querySelectorAll('.validation-desc').forEach(el => el.style.display = 'none');
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

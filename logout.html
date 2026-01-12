@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logging Out... | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-body: #F4F7FE;
+            --primary-orange: #FF6B35;
+            --text-primary: #2B3674;
+            --white: #ffffff;
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1437;
+            --white: #111c44;
+            --text-primary: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Shapes */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50%;
+            height: 50%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .auth-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #FF6B35;
+            box-shadow: 0 20px 50px rgba(112, 144, 176, 0.12);
+            text-align: center;
+            z-index: 1;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 107, 53, 0.1);
+            border-top: 4px solid var(--primary-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        .logout-text {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .sub-text {
+            color: var(--text-primary);
+            opacity: 0.7;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+
+    <div class="auth-card">
+        <img src="Main Icon PNG.png" alt="Logo" class="logo-img">
+        <div class="logout-text">Logging Out</div>
+        <div class="spinner"></div>
+        <div class="sub-text">Please wait...</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check for theme consistency
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme === 'light') {
+                document.body.classList.remove('dark-mode');
+            }
+
+            // Perform Logout Operations
+            setTimeout(() => {
+                // Clear Session Data
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Redirect to Login
+                window.location.replace('login.html');
+            }, 2000); // 2 second delay for better UX
+        });
+    </script>
+</body>
+
+</html>

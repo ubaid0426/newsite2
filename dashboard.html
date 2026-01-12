@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | UnifyXpress</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Light Mode (Default for Dashboard Body) */
+            --bg-body: #F4F7FE;
+            --bg-card: #FFFFFF;
+            --text-primary: #2B3674;
+            --text-secondary: #A3AED0;
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F9844A;
+            --border-color: #FF6B35;
+            ;
+            --hover-bg: #F4F7FE;
+            --shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --sidebar-width: 280px;
+
+            /* Sidebar is ALWAYS Dark */
+            --sidebar-bg: #111c44;
+            --sidebar-text-primary: #FFFFFF;
+            --sidebar-text-secondary: #A3AED0;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode {
+            /* Dark Mode Variables for Dashboard Body */
+            --bg-body: #0b1437;
+            --bg-card: #111c44;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3AED0;
+            --border-color: #A3AED0;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            /* Sharper text */
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-orange);
+            border-radius: 10px;
+        }
+
+        /* --- Sidebar (Permanently Dark) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            /* Enforce dark bg */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            overflow-y: auto;
+            color: var(--sidebar-text-primary);
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-direction: column;
+            gap: 5px;
+            text-align: center;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 30px;
+            height: auto;
+        }
+
+        .brand-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-orange);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-menu {
+            padding: 20px 15px;
+            flex-grow: 1;
+        }
+
+        .menu-category {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--sidebar-text-secondary);
+            margin: 15px 10px 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: var(--sidebar-text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--sidebar-text-primary);
+            background: var(--sidebar-hover);
+        }
+
+        .nav-item.active {
+            border-right: 3px solid var(--primary-orange);
+            background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        /* Dropdown - Adjusted for Sidebar Theme */
+        .nav-dropdown-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: var(--sidebar-text-secondary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-dropdown-btn:hover {
+            color: var(--sidebar-text-primary);
+            background: var(--sidebar-hover);
+        }
+
+        .nav-dropdown.open .nav-dropdown-btn {
+            color: var(--primary-orange);
+            font-weight: 600;
+        }
+
+        .nav-dropdown-btn i.arrow {
+            margin-right: 0;
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+
+        .nav-dropdown.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown-content {
+            display: none;
+            padding-left: 20px;
+            animation: slideIn 0.2s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-dropdown.open .nav-dropdown-content {
+            display: block;
+        }
+
+        .sub-link {
+            display: block;
+            padding: 8px 15px 8px 35px;
+            color: var(--sidebar-text-secondary);
+            font-size: 13px;
+            position: relative;
+            font-weight: 400;
+        }
+
+        .sub-link:hover {
+            color: var(--sidebar-text-primary);
+        }
+
+        .sub-link::before {
+            content: '';
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--sidebar-text-secondary);
+        }
+
+        .sub-link:hover::before {
+            background: var(--primary-orange);
+        }
+
+        .user-role-badge {
+            font-size: 16px;
+            color: var(--primary-orange);
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /* --- Main Content --- */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin-top: 0;
+            height: 100vh;
+            /* Fit to page */
+        }
+
+        /* Top Header */
+        .top-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: var(--bg-body);
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h4 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-title h2 {
+            font-size: 24px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Content Body */
+        .content-body {
+            padding: 30px;
+            padding-bottom: 100px;
+            /* Space for fixed footer */
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- Wallet Card Redesign --- */
+        .wallet-card {
+            background: var(--primary-orange);
+            /* Changed to Orange */
+            border-radius: 15px;
+            /* Reduced radius slightly */
+            padding: 10px;
+            /* Reduced padding */
+            color: white;
+            margin-bottom: 10px;
+            margin-top: -30px;
+            /* Reduced margin */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+            border: none;
+            max-width: 100%;
+        }
+
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .wallet-card::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .wallet-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wallet-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wallet-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .wallet-balance {
+            font-size: 32px;
+            /* Reduced font size */
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .fund-btn {
+            background: white;
+            color: var(--primary-orange);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+            text-decoration: none;
+        }
+
+        .fund-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 107, 53, 0.5);
+            background: var(--secondary-orange);
+        }
+
+        /* Services Grid Styling */
+        .services-section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-orange);
+        }
+
+        .services-grid {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(5, 1fr);
+            /* 5 cols desktop */
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            padding: 10px 0px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            border: 1px solid var(--border-color);
+            /* Added 2px border */
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border: 2px solid var(--primary-orange);
+            /* Highlight on hover */
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.15);
+            /* Soft orange glow */
+        }
+
+        .service-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover .service-icon {
+            background: var(--primary-orange);
+            color: #fff;
+        }
+
+        .service-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .service-description {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Responsive */
+        .menu-toggle-btn {
+            display: none;
+            font-size: 20px;
+            color: var(--text-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow: auto;
+                display: block;
+            }
+
+            .main-wrapper {
+                height: auto;
+                overflow: visible;
+                margin-top: 0;
+            }
+
+            .content-body {
+                overflow: visible;
+                padding-bottom: 80px;
+                height: auto;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s;
+                height: 100vh;
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .menu-toggle-btn {
+                display: block;
+            }
+
+            /* 3 Grid items per row on small screen */
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .service-card {
+                padding: 15px 5px;
+                min-height: 110px;
+            }
+
+            .service-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .service-name {
+                font-size: 11px;
+            }
+
+            .service-description {
+                display: none;
+            }
+        }
+
+        /* --- Footer --- */
+        .main-footer {
+            text-align: center;
+            padding: 15px 20px;
+            background: #FF6B35;
+            /* Brand Orange */
+            border-top: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+
+            /* Overlay Positioning */
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            /* Start after sidebar */
+            z-index: 99;
+            /* Above content */
+            box-shadow: 0 -5px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .main-footer a {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .main-footer a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .main-footer {
+                left: 0;
+                /* Full width on mobile */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by js/load-components.js -->
+    </aside>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="header-title">
+                    <h3>Dashboard</h3>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="profile-btn">
+                    <div class="profile-img">U</div>
+                    <span
+                        style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: none; @media(min-width: 768px){display:block;}">Ubaidullah</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body">
+
+            <!-- Wallet Section -->
+            <div class="wallet-card">
+                <div class="wallet-content">
+                    <div class="wallet-top">
+                        <div class="wallet-label">Total Balance</div>
+                        <div style="font-size: 24px; opacity: 0.5;"><i class="fas fa-wallet"></i></div>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
+                        <div class="wallet-balance">₦25,450.00</div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <a href="funding.html" class="fund-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                Fund Wallet
+                            </a>
+                            <a href="expenses.html" class="fund-btn">
+                                <i class="fas fa-minus-circle"></i>
+                                Expenses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Section -->
+            <div class="services-section">
+                <h2 class="section-title">
+                    <i class="fas fa-th-large"></i>
+                    All Services
+                </h2>
+                <div class="services-grid">
+                    <a href="ninverify.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div class="service-name">NIN Search</div>
+                            <div class="service-description">Search by NIN</div>
+                        </div>
+                    </a>
+
+                    <a href="ninphone.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="service-name">NIN by Phone</div>
+                            <div class="service-description">Search NIN by phone</div>
+                        </div>
+                    </a>
+
+                    <a href="demographic.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="service-name">Search Demographic</div>
+                            <div class="service-description">Search by demographics</div>
+                        </div>
+                    </a>
+
+                    <a href="bvnverify.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="service-name">BVN Verification</div>
+                            <div class="service-description">Verify BVN details</div>
+                        </div>
+                    </a>
+
+                    <a href="bvnretrieval.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-phone-square"></i>
+                            </div>
+                            <div class="service-name">BVN Retrieval</div>
+                            <div class="service-description">Search BVN by phone</div>
+                        </div>
+                    </a>
+
+                    <a href="personalization.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-user-cog"></i>
+                            </div>
+                            <div class="service-name">Personalization</div>
+                            <div class="service-description">Submit Tracking ID for slip</div>
+                        </div>
+                    </a>
+
+                    <a href="ipeclearance.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="service-name">IPE Clearance</div>
+                            <div class="service-description">IPE clearance service</div>
+                        </div>
+                    </a>
+
+                    <a href="validation.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="service-name">Submit Validation</div>
+                            <div class="service-description">Validate documents</div>
+                        </div>
+                    </a>
+
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-hand-pointer"></i>
+                        </div>
+                        <div class="service-name">Self Service</div>
+                        <div class="service-description">Self-service portal</div>
+                    </div>
+
+                    <a href="ninmodification.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="service-name">NIN Modification</div>
+                            <div class="service-description">Modify NIN details</div>
+                        </div>
+                    </a>
+
+                    <a href="bvnmodification.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-file-signature"></i>
+                            </div>
+                            <div class="service-name">BVN Modification</div>
+                            <div class="service-description">Modify BVN details</div>
+                        </div>
+                    </a>
+
+                    <a href="data.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <div class="service-name">Buy Data</div>
+                            <div class="service-description">Purchase data bundles</div>
+                        </div>
+                    </a>
+
+                    <a href="airtime.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="service-name">Buy Airtime</div>
+                            <div class="service-description">Purchase airtime</div>
+                        </div>
+                    </a>
+
+                    <a href="exampins.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="service-name">EXAM PIN</div>
+                            <div class="service-description">Purchase exam pin</div>
+                        </div>
+                    </a>
+
+                    <a href="others.html">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                            <div class="service-name">Others</div>
+                            <div class="service-description">More services</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="main-footer">
+                <!-- Footer content loaded by js/load-components.js -->
+            </footer>
+        </div>
+
+    </main>
+
+    <script src="js/load-components.js"></script>
+</body>
+
+</html>
